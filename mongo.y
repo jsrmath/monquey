@@ -87,16 +87,17 @@ lexer (c:cs)
     | isSpace c = lexer cs
     | isDigit c = lexNum (c:cs)
     | isAlpha c || isSymbol c = lexId (c:cs)
+    | otherwise = parseError []
 
 lexString cs q = TokenString str : lexer (tail rest)
    where (str, rest) = span (\c -> c /= q) cs 
 
 lexNum cs = TokenInt (read num) : lexer rest
-    where (num,rest) = span isDigit cs
+    where (num, rest) = span isDigit cs
 
 lexId cs =
     case span (\c -> not (isSpace c)) cs of
-    	(id,rest) -> TokenID id : lexer rest
+    	(id, rest) -> TokenID id : lexer rest
 
 main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
 }
