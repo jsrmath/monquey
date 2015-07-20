@@ -1,6 +1,7 @@
 {
 module Main where
 import Data.Char
+import MongoIR
 }
 
 %name mongo
@@ -49,38 +50,12 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-type Object = [Pair]
-type Identifier = String
-
-data Command = Command Identifier Identifier [Item] deriving Show
-
-data Item
-	= LiteralItem Literal
-	| ObjItem Object
-	deriving Show
-
-data Literal
-	= String String
-	| Int Int
-	deriving Show
-
-data Value
-	= LiteralValue Literal
-	| ObjValue Object
-	deriving Show
-
-data Pair = Pair Identifier Value deriving Show
-
-data Token = TokenDB | TokenID String | TokenString String | TokenInt Int | TokenPipe | TokenComma
-           | TokenSemi | TokenLBrace | TokenRBrace | TokenLBracket | TokenRBracket
-           deriving Show
-
 lexer :: String -> [Token]
 lexer [] = []
 lexer (c:cs) 
-      | isSpace c = lexer cs
-      | isAlpha c = lexId (c:cs)
-      | isDigit c = lexNum (c:cs)
+    | isSpace c = lexer cs
+    | isAlpha c = lexId (c:cs)
+    | isDigit c = lexNum (c:cs)
 lexer ('|':cs) = TokenPipe : lexer cs
 lexer (',':cs) = TokenComma : lexer cs
 lexer (';':cs) = TokenSemi : lexer cs
@@ -90,12 +65,12 @@ lexer ('[':cs) = TokenLBrace : lexer cs
 lexer (']':cs) = TokenRBrace : lexer cs
 
 lexNum cs = TokenInt (read num) : lexer rest
-      where (num,rest) = span isDigit cs
+    where (num,rest) = span isDigit cs
 
 lexId cs =
-   case span isAlpha cs of
-      ("db",rest) -> TokenDB : lexer rest
-      (id,rest)   -> TokenID id : lexer rest
+    case span isAlpha cs of
+    	("db",rest) -> TokenDB : lexer rest
+    	(id,rest) -> TokenID id : lexer rest
 
 main = getContents >>= print . mongo . lexer
 }
