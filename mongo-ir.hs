@@ -8,6 +8,7 @@ data Command = Command Identifier Identifier [Item] deriving Show
 data Item
 	= LitItem Literal
 	| ObjItem Object
+	| EmptyObj
 	deriving Show
 
 data Literal

@@ -12,6 +12,7 @@ genItems items = intercalate ", " $ map genItem items
 genItem :: Item -> String
 genItem (LitItem lit) = genLit lit
 genItem (ObjItem obj) = genObj obj
+genItem EmptyObj = "{}"
 
 genObj :: Object -> String
 genObj obj = "{" ++ (intercalate ", " $ map genPair obj) ++ "}"
@@ -25,5 +26,4 @@ genId :: String -> String
 genId id = "\"" ++ id ++ "\""
 
 genPair :: Pair -> String
-genPair (Pair id (LitItem lit)) = genId id ++ ": " ++ genLit lit
-genPair (Pair id (ObjItem obj)) = genId id ++ ": " ++ genObj obj
+genPair (Pair id item) = genId id ++ ": " ++ genItem item

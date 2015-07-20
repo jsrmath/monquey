@@ -34,11 +34,15 @@ Arglist
 Item
 	: Literal { LitItem $1 }
 	| Object { ObjItem $1 }
+	| EmptyObj { EmptyObj }
 
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
 	| id '=>' Object { [Pair $1 (ObjItem $3)] }
+
+EmptyObj:
+	'{' '}' { EmptyObj }
 
 Array
 	: '[' ']' { [] }
@@ -52,6 +56,7 @@ Pair
 	: id Literal { Pair $1 (LitItem $2) }
 	| id Pair { Pair $1 (ObjItem [$2]) }
 	| id '{' Object '}' { Pair $1 (ObjItem $3) }
+	| id  EmptyObj { Pair $1 EmptyObj }
 
 Literal
 	: string { String $1 }

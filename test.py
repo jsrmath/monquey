@@ -9,7 +9,8 @@ cases = [
   ('db coll find | "a" | 1 | [1 ; 2 ; 3]', 'db.coll.find("a", 1, [1, 2, 3]);'),
   ('db coll find | a 1, c => d => b 1, c 2', 'db.coll.find({"a": 1, "c": {"d": {"b": 1, "c": 2}}});'),
   ('db coll find | c => d => b 1, c 2, a 1', 'db.coll.find({"c": {"d": {"b": 1, "c": 2, "a": 1}}});'),
-  ('db coll find | [e 5, a => b => c 2, d 3 ; f 6]', 'db.coll.find([{"e": 5, "a": {"b": {"c": 2, "d": 3}}}, {"f": 6}]);')
+  ('db coll find | [e 5, a => b => c 2, d 3 ; f 6]', 'db.coll.find([{"e": 5, "a": {"b": {"c": 2, "d": 3}}}, {"f": 6}]);'),
+  ('db coll find | {} | a {} | [1 ; {}]', 'db.coll.find({}, {"a": {}}, [1, {}]);')
 ]
 
 for case in cases:
