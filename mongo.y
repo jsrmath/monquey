@@ -21,6 +21,7 @@ import MongoCodeGen
 	'}' { TokenRBrace }
 	'[' { TokenLBracket }
 	']' { TokenRBracket }
+	'=>' { TokenArrow }
 
 %%
 
@@ -33,10 +34,20 @@ Arglist
 Item
 	: Literal { LitItem $1 }
 	| Object { ObjItem $1 }
+	| Array { ArrItem $1 }
 
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
+	| id '=>' Object { [Pair $1 (ObjValue $3)] }
+
+Array
+	: '[' ']' { [] }
+	| '[' ArrList ']' { $2 }
+
+ArrList
+	: Item { [$1] }
+	| Item ';' ArrList { $1 : $3 }
 
 Pair
 	: id Literal { Pair $1 (LitValue $2) }
@@ -60,10 +71,11 @@ lexer (c:cs)
 lexer ('|':cs) = TokenPipe : lexer cs
 lexer (',':cs) = TokenComma : lexer cs
 lexer (';':cs) = TokenSemi : lexer cs
-lexer ('{':cs) = TokenLBracket : lexer cs
-lexer ('}':cs) = TokenRBracket : lexer cs
-lexer ('[':cs) = TokenLBrace : lexer cs
-lexer (']':cs) = TokenRBrace : lexer cs
+lexer ('{':cs) = TokenLBrace : lexer cs
+lexer ('}':cs) = TokenRBrace : lexer cs
+lexer ('[':cs) = TokenLBracket : lexer cs
+lexer (']':cs) = TokenRBracket : lexer cs
+lexer ('=':'>':cs) = TokenArrow : lexer cs
 
 lexNum cs = TokenInt (read num) : lexer rest
     where (num,rest) = span isDigit cs

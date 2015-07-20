@@ -11,10 +11,14 @@ genItems items = intercalate ", " $ map genItem items
 
 genItem :: Item -> String
 genItem (LitItem lit) = genLit lit
-genItem (ObjItem obj) = genObject obj
+genItem (ObjItem obj) = genObj obj
+genItem (ArrItem arr) = genArr arr
 
-genObject :: Object -> String
-genObject obj = "{ " ++ (intercalate ", " $ map genPair obj) ++ " }"
+genObj :: Object -> String
+genObj obj = "{" ++ (intercalate ", " $ map genPair obj) ++ "}"
+
+genArr :: Array -> String
+genArr arr = "[" ++ (intercalate ", " $ map genItem arr) ++ "]"
 
 genLit :: Literal -> String
 genLit (Int i) = show i
@@ -25,4 +29,4 @@ genId id = "\"" ++ id ++ "\""
 
 genPair :: Pair -> String
 genPair (Pair id (LitValue lit)) = genId id ++ ": " ++ genLit lit
-genPair (Pair id (ObjValue obj)) = genId id ++ ": " ++ genObject obj
+genPair (Pair id (ObjValue obj)) = genId id ++ ": " ++ genObj obj
