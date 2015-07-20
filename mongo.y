@@ -12,7 +12,7 @@ import MongoCodeGen
 %token 
 	db { TokenDB }
 	id { TokenID $$ }
-	{- string { TokenString $$ } -}
+	string { TokenString $$ }
 	int { TokenInt $$ }
 	'|' { TokenPipe }
 	',' { TokenComma }
@@ -55,8 +55,8 @@ Pair
 	| id '{' Object '}' { Pair $1 (ObjValue $3) }
 
 Literal
-	{-: string { String $1 } -}
-	: int { Int $1 }
+	: string { String $1 }
+	| int { Int $1 }
 
 {
 parseError :: [Token] -> a
@@ -71,11 +71,16 @@ lexer (c:cs)
 lexer ('|':cs) = TokenPipe : lexer cs
 lexer (',':cs) = TokenComma : lexer cs
 lexer (';':cs) = TokenSemi : lexer cs
-lexer ('{':cs) = TokenLBrace : lexer cs
-lexer ('}':cs) = TokenRBrace : lexer cs
-lexer ('[':cs) = TokenLBracket : lexer cs
-lexer (']':cs) = TokenRBracket : lexer cs
+lexer ('{':cs) = TokenLBracket : lexer cs
+lexer ('}':cs) = TokenRBracket : lexer cs
+lexer ('[':cs) = TokenLBrace : lexer cs
+lexer (']':cs) = TokenRBrace : lexer cs
 lexer ('=':'>':cs) = TokenArrow : lexer cs
+lexer ('\'':cs) = lexString cs '\'' 
+lexer ('\"':cs) = lexString cs '\"' 
+
+lexString cs q = TokenString str : lexer (tail rest)
+   where (str, rest) = span (\c -> c /= q) cs 
 
 lexNum cs = TokenInt (read num) : lexer rest
     where (num,rest) = span isDigit cs
