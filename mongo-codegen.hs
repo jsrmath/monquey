@@ -3,8 +3,14 @@ import MongoIR
 import Data.List
 
 genCommand :: MongoIR.Command -> String
-genCommand (Command id1 id2 items) =
-	"db." ++ id1 ++ "." ++ id2 ++ "(" ++ genItems items ++ ");"
+genCommand (Command ids items) =
+	genBeginIds ids ++ "(" ++ genItems items ++ ");" 
+
+genBeginIds :: [Identifier] -> String
+genBeginIds ids = intercalate "." $ map genBeginId ids
+
+genBeginId :: Identifier -> String
+genBeginId (id) = id
 
 genItems :: [Item] -> String
 genItems items = intercalate ", " $ map genItem items

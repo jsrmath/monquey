@@ -4,7 +4,7 @@ type Object = [Pair]
 type Array = [Item]
 type Identifier = String
 
-data Command = Command Identifier Identifier [Item] deriving Show
+data Command = Command [Identifier] [Item] deriving Show
 
 data Item
 	= LitItem Literal

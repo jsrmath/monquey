@@ -10,7 +10,6 @@ import MongoCodeGen
 %error { parseError }
 
 %token 
-	db { TokenDB }
 	id { TokenID $$ }
 	string { TokenString $$ }
 	int { TokenInt $$ }
@@ -25,7 +24,11 @@ import MongoCodeGen
 
 %%
 
-Command : db id id Arglist { Command $2 $3 $4 }
+Command : Idlist Arglist { Command $1 $2 }
+
+Idlist
+	: id { [$1] }
+	| id Idlist { $1 : $2}
 
 Arglist
 	: '|' Item Arglist { $2 : $3 }
@@ -64,10 +67,6 @@ parseError _ = error "Parse error"
 
 lexer :: String -> [Token]
 lexer [] = []
-lexer (c:cs) 
-    | isSpace c = lexer cs
-    | isAlpha c = lexId (c:cs)
-    | isDigit c = lexNum (c:cs)
 lexer ('|':cs) = TokenPipe : lexer cs
 lexer (',':cs) = TokenComma : lexer cs
 lexer (';':cs) = TokenSemi : lexer cs
@@ -78,6 +77,11 @@ lexer (']':cs) = TokenRBrace : lexer cs
 lexer ('=':'>':cs) = TokenArrow : lexer cs
 lexer ('\'':cs) = lexString cs '\'' 
 lexer ('\"':cs) = lexString cs '\"' 
+lexer ('_':cs) = lexId ('_':cs)
+lexer (c:cs) 
+    | isSpace c = lexer cs
+    | isDigit c = lexNum (c:cs)
+    | isAlpha c || isSymbol c = lexId (c:cs)
 
 lexString cs q = TokenString str : lexer (tail rest)
    where (str, rest) = span (\c -> c /= q) cs 
@@ -86,8 +90,7 @@ lexNum cs = TokenInt (read num) : lexer rest
     where (num,rest) = span isDigit cs
 
 lexId cs =
-    case span isAlpha cs of
-    	("db",rest) -> TokenDB : lexer rest
+    case span (\c -> not (isSpace c)) cs of
     	(id,rest) -> TokenID id : lexer rest
 
 main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
