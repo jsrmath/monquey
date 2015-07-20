@@ -1,7 +1,6 @@
 module MongoIR where
 
 type Object = [Pair]
-type Array = [Item]
 type Identifier = String
 
 data Command = Command Identifier Identifier [Item] deriving Show
@@ -9,12 +8,12 @@ data Command = Command Identifier Identifier [Item] deriving Show
 data Item
 	= LitItem Literal
 	| ObjItem Object
-	| ArrItem Array
 	deriving Show
 
 data Literal
 	= String String
 	| Int Int
+	| Array [Item]
 	deriving Show
 
 data Value
