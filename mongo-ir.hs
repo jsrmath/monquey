@@ -6,7 +6,7 @@ type Identifier = String
 data Command = Command Identifier Identifier [Item] deriving Show
 
 data Item
-	= LiteralItem Literal
+	= LitItem Literal
 	| ObjItem Object
 	deriving Show
 
@@ -16,7 +16,7 @@ data Literal
 	deriving Show
 
 data Value
-	= LiteralValue Literal
+	= LitValue Literal
 	| ObjValue Object
 	deriving Show
 

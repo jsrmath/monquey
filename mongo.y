@@ -2,6 +2,7 @@
 module Main where
 import Data.Char
 import MongoIR
+import MongoCodeGen
 }
 
 %name mongo
@@ -30,7 +31,7 @@ Arglist
 	| {- empty -} { [] }
 
 Item
-	: Literal { LiteralItem $1 }
+	: Literal { LitItem $1 }
 	| Object { ObjItem $1 }
 
 Object
@@ -38,7 +39,7 @@ Object
 	| Pair ',' Object { $1 : $3 }
 
 Pair
-	: id Literal { Pair $1 (LiteralValue $2) }
+	: id Literal { Pair $1 (LitValue $2) }
 	| id Pair { Pair $1 (ObjValue [$2]) }
 	| id '{' Object '}' { Pair $1 (ObjValue $3) }
 
@@ -72,5 +73,5 @@ lexId cs =
     	("db",rest) -> TokenDB : lexer rest
     	(id,rest) -> TokenID id : lexer rest
 
-main = getContents >>= print . mongo . lexer
+main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
 }
