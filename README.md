@@ -1,6 +1,6 @@
 # mongo-query
-A cleaner MongoDB query syntax
+A cleaner MongoDB shell syntax
 
 ## Usage
-make
-echo "some query here" | ./mongo
+* make
+* echo "some query here" | ./mongo
