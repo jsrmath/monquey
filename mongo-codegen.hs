@@ -25,5 +25,5 @@ genId :: String -> String
 genId id = "\"" ++ id ++ "\""
 
 genPair :: Pair -> String
-genPair (Pair id (LitValue lit)) = genId id ++ ": " ++ genLit lit
-genPair (Pair id (ObjValue obj)) = genId id ++ ": " ++ genObj obj
+genPair (Pair id (LitItem lit)) = genId id ++ ": " ++ genLit lit
+genPair (Pair id (ObjItem obj)) = genId id ++ ": " ++ genObj obj

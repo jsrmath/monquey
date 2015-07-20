@@ -38,7 +38,7 @@ Item
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
-	| id '=>' Object { [Pair $1 (ObjValue $3)] }
+	| id '=>' Object { [Pair $1 (ObjItem $3)] }
 
 Array
 	: '[' ']' { [] }
@@ -49,9 +49,9 @@ ArrList
 	| Item ';' ArrList { $1 : $3 }
 
 Pair
-	: id Literal { Pair $1 (LitValue $2) }
-	| id Pair { Pair $1 (ObjValue [$2]) }
-	| id '{' Object '}' { Pair $1 (ObjValue $3) }
+	: id Literal { Pair $1 (LitItem $2) }
+	| id Pair { Pair $1 (ObjItem [$2]) }
+	| id '{' Object '}' { Pair $1 (ObjItem $3) }
 
 Literal
 	: string { String $1 }
