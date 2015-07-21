@@ -75,10 +75,17 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-tokenChars = " |,;{}[]='\"\n"
+tokenChars = " |,;{}[]'\""
 
-isValidId :: Char -> Bool
-isValidId c = not (isInfixOf [c] tokenChars)
+isValidId :: Char -> [Char] -> Bool
+isValidId '=' ('>':_) = False
+isValidId c _ = not (isInfixOf [c] tokenChars)
+
+span' :: (a -> [a] -> Bool) -> [a] -> ([a],[a])
+span' _ xs@[] =  (xs, xs)
+span' p xs@(x:xs')
+         | p x xs'      =  let (ys,zs) = span' p xs' in (x:ys,zs)
+         | otherwise    =  ([],xs)
 
 lexer :: String -> [Token]
 lexer [] = []
@@ -95,7 +102,7 @@ lexer ('\"':cs) = lexString cs '\"'
 lexer (c:cs) 
     | isSpace c = lexer cs
     | isDigit c = lexNum (c:cs)
-    | isValidId c = lexId (c:cs)
+    | isValidId c cs = lexId (c:cs)
     | otherwise = parseError []
 
 lexString cs q = TokenString str : lexer (tail rest)
@@ -105,8 +112,7 @@ lexNum cs = TokenInt (read num) : lexer rest
     where (num, rest) = span isDigit cs
 
 lexId cs =
-    case span isValidId cs of
-    	(id, rest) -> TokenID id : lexer rest
+    let (id, rest) = span' isValidId cs in TokenID id : lexer rest
 
 main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
 }
