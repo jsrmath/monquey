@@ -80,7 +80,10 @@ Literal
 
 {
 parseError :: [Token] -> a
-parseError _ = error "Parse error"
+parseError ts = error ("Parse error: " ++ show ts)
+
+lexError :: Char -> a
+lexError c = error ("Lexical error: " ++ show c)
 
 tokenChars = " |,;{}[]'\"\n"
 
@@ -112,7 +115,7 @@ lexer (c:cs)
     | isValidId c cs = case lexKeyword (c:cs) of
     	Just (kwd, rest) -> TokenKeyword kwd : lexer rest
     	Nothing -> lexId (c:cs)
-    | otherwise = parseError []
+    | otherwise = lexError c
 
 lexString cs q = TokenString str : lexer (tail rest)
    where (str, rest) = span (\c -> c /= q) cs 
