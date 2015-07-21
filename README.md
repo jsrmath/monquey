@@ -57,9 +57,9 @@ A cleaner MongoDB shell syntax
 
 `db.inventory.update({"manufacturer": "XYZ Company"}, {"$set": {"details.model": "14Q2"}}, {"multi": true});`
 ***
-`db inventory update | item "MNO2" | $currentDate lastModified true, $set => category "apparel", details => model "14Q3", manufacturer "XYZ Company"`
+`db inventory update | item "MNO2" | $set { category "apparel", details => model "14Q3", manufacturer "XYZ Company" }, $currentDate lastModified true`
 
-`db.inventory.update({"item": "MNO2"}, {"$currentDate": {"lastModified": true}, "$set": {"category": "apparel", "details": {"model": "14Q3", "manufacturer": "XYZ Company"}}});`
+`db.inventory.update({"item": "MNO2"}, {"$set": {"category": "apparel", "details": {"model": "14Q3", "manufacturer": "XYZ Company"}}, "$currentDate": {"lastModified": true}});`
 
 ### Delete
 

@@ -23,6 +23,7 @@ cases = [
   ('db people find | | name 1', 'db.people.find({}, {"name": 1});'),
   ('db coll find | a true, b false, c null', 'db.coll.find({"a": true, "b": false, "c": null});'),
   ('use mydb', 'use mydb;'),
+  ('db foo | a { b 1, c => a 1, b 2 }, c 3', 'db.foo({"a": {"b": 1, "c": {"a": 1, "b": 2}}, "c": 3});'),
   ('foo bar baz', invalid),
   ('db coll find | a b', badparse)
 ]
