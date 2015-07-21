@@ -17,6 +17,9 @@ cases = [
   ('db coll find | "a b" 1', 'db.coll.find({"a b": 1});'),
   ('db coll find | a "yay monquee"', 'db.coll.find({"a": "yay monquee"});'),
   ('db coll find | > 5, < 5, >= 5, <= 5, = 5, != 5', 'db.coll.find({"$gt": 5, "$lt": 5, "$gte": 5, "$lte": 5, "$eq": 5, "$ne": 5});'),
+  ('db coll find | a=>b=>c 1', 'db.coll.find({"a": {"b": {"c": 1}}});'),
+  ('db coll find | a.b 1', 'db.coll.find({"a.b": 1});'),
+  ('db people find | | name 1', 'db.people.find({}, {"name": 1});'),
   ('use mydb', 'use mydb;'),
   ('foo bar baz', invalid)
 ]

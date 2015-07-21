@@ -33,6 +33,7 @@ Idlist
 
 Arglist
 	: '|' Item Arglist { $2 : $3 }
+	| '|' Arglist { EmptyObj : $2 }
 	| {- empty -} { [] }
 
 Item

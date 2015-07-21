@@ -22,6 +22,18 @@ A cleaner MongoDB shell syntax
 
 `db.people.find({"name": "Julian", "age": 19});`
 ***
+`db people find | name "Julian", age 19 | age 0`
+
+`db.people.find({"name": "Julian", "age": 19}, {"age": 0});`
+***
+`db.people.find`
+
+`db.people.find();`
+***
+`db.people.find |`
+
+`db.people.find({});`
+***
 `db people find | age 19, name => first "Julian", last "Rosenblum"`
 
 `db.people.find({"age": 19, "name": {"first": "Julian", "last": "Rosenblum"}});`
