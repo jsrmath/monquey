@@ -25,8 +25,11 @@ genLit (Int i) = show i
 genLit (String s) = "\"" ++ s ++ "\""
 genLit (Array a) = "[" ++ (intercalate ", " $ map genItem a) ++ "]"
 
-genId :: String -> String
-genId id = "\"" ++ id ++ "\""
+genId :: ObjectId -> String
+genId (ObjId id) = "\"" ++ id ++ "\""
+genId (StringId id) = "\"" ++ id ++ "\""
+-- genId :: String -> String
+-- genId id = "\"" ++ id ++ "\""
 
 genPair :: Pair -> String
 genPair (Pair id item) = genId id ++ ": " ++ genItem item

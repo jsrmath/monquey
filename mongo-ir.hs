@@ -11,13 +11,18 @@ data Item
 	| EmptyObj
 	deriving Show
 
+data ObjectId 
+	= ObjId Identifier  
+        | StringId String
+	deriving Show
+
 data Literal
 	= String String
 	| Int Int
 	| Array [Item]
 	deriving Show
 
-data Pair = Pair Identifier Item deriving Show
+data Pair = Pair ObjectId Item deriving Show
 
 data Token = TokenDB | TokenID String | TokenString String | TokenInt Int | TokenPipe | TokenComma
            | TokenSemi | TokenLBrace | TokenRBrace | TokenLBracket | TokenRBracket | TokenArrow

@@ -1,6 +1,7 @@
 {
 module Main where
 import Data.Char
+import Data.List
 import MongoIR
 import MongoCodeGen
 }
@@ -42,7 +43,7 @@ Item
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
-	| id '=>' Object { [Pair $1 (ObjItem $3)] }
+	| ObjectId '=>' Object { [Pair $1 (ObjItem $3)] }
 
 EmptyObj:
 	'{' '}' { EmptyObj }
@@ -56,10 +57,14 @@ ArrList
 	| Item ';' ArrList { $1 : $3 }
 
 Pair
-	: id Literal { Pair $1 (LitItem $2) }
-	| id Pair { Pair $1 (ObjItem [$2]) }
-	| id '{' Object '}' { Pair $1 (ObjItem $3) }
-	| id  EmptyObj { Pair $1 EmptyObj }
+	: ObjectId Literal { Pair $1 (LitItem $2) }
+	| ObjectId Pair { Pair $1 (ObjItem [$2]) }
+	| ObjectId '{' Object '}' { Pair $1 (ObjItem $3) }
+	| ObjectId  EmptyObj { Pair $1 EmptyObj }
+
+ObjectId
+	: id { ObjId $1 }
+ 	| string { StringId $1 } 
 
 Literal
 	: string { String $1 }
@@ -69,6 +74,11 @@ Literal
 {
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
+
+tokenChars = " |,;{}[]='\"_"
+
+isValidId :: Char -> Bool
+isValidId c = not (isInfixOf [c] tokenChars)
 
 lexer :: String -> [Token]
 lexer [] = []
@@ -96,7 +106,7 @@ lexNum cs = TokenInt (read num) : lexer rest
     where (num, rest) = span isDigit cs
 
 lexId cs =
-    case span (\c -> not (isSpace c)) cs of
+    case span isValidId cs of
     	(id, rest) -> TokenID id : lexer rest
 
 main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
