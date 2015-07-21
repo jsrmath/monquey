@@ -75,7 +75,7 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-tokenChars = " |,;{}[]'\""
+tokenChars = " |,;{}[]'\"\n"
 
 isValidId :: Char -> [Char] -> Bool
 isValidId '=' ('>':_) = False
@@ -84,8 +84,8 @@ isValidId c _ = not (isInfixOf [c] tokenChars)
 span' :: (a -> [a] -> Bool) -> [a] -> ([a],[a])
 span' _ xs@[] =  (xs, xs)
 span' p xs@(x:xs')
-         | p x xs'      =  let (ys,zs) = span' p xs' in (x:ys,zs)
-         | otherwise    =  ([],xs)
+    | p x xs'      =  let (ys,zs) = span' p xs' in (x:ys,zs)
+    | otherwise    =  ([],xs)
 
 lexer :: String -> [Token]
 lexer [] = []
