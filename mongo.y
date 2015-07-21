@@ -2,6 +2,7 @@
 module Main where
 import Data.Char
 import Data.List
+import Text.Regex.Posix
 import MongoIR
 import MongoCodeGen
 }
@@ -13,10 +14,10 @@ import MongoCodeGen
 %token 
 	id { TokenID $$ }
 	string { TokenString $$ }
-	int { TokenInt $$ }
 	true { TokenKeyword "true" }
 	false { TokenKeyword "false" }
 	null { TokenKeyword "null" }
+        num { TokenNum $$ }
 	'|' { TokenPipe }
 	',' { TokenComma }
 	';' { TokenSemi }
@@ -72,10 +73,10 @@ Key
 
 Literal
 	: string { String $1 }
-	| int { Int $1 }
 	| true { Bool True }
 	| false { Bool False }
 	| null { Null }
+	| num { NumType $1 }
 	| Array { Array $1 }
 
 {
@@ -94,6 +95,9 @@ span' p xs@(x:xs')
     | p x xs'      =  let (ys,zs) = span' p xs' in (x:ys,zs)
     | otherwise    =  ([],xs)
 
+floatRegex = "^-?[0-9]+\\.?[0-9]+"
+intRegex = "^-?[0-9]+"
+
 lexer :: String -> [Token]
 lexer [] = []
 lexer ('|':cs) = TokenPipe : lexer cs
@@ -108,7 +112,7 @@ lexer ('\'':cs) = lexString cs '\''
 lexer ('\"':cs) = lexString cs '\"' 
 lexer (c:cs) 
     | isSpace c = lexer cs
-    | isDigit c = lexNum (c:cs)
+    | isDigit c || c == '-' = lexNum (c:cs)
     | isValidId c cs = case lexKeyword (c:cs) of
     	Just (kwd, rest) -> TokenKeyword kwd : lexer rest
     	Nothing -> lexId (c:cs)
@@ -117,8 +121,13 @@ lexer (c:cs)
 lexString cs q = TokenString str : lexer (tail rest)
    where (str, rest) = span (\c -> c /= q) cs 
 
-lexNum cs = TokenInt (read num) : lexer rest
-    where (num, rest) = span isDigit cs
+<<<<<<< HEAD
+lexNum cs =
+	let (before, f, rest) = cs =~ floatRegex in
+	if before == "" && f /= "" then TokenNum (Float (read f)) : lexer rest 
+	else let (before, i, rest) = cs =~ intRegex in
+	  if before == "" && i /= "" then TokenNum (Int (read i)) : lexer rest
+	else parseError []   
 
 lexKeyword :: [Char] -> Maybe (String, [Char])
 lexKeyword cs = foldr lexKeyword' Nothing ["true", "false", "null"] where
