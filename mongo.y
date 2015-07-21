@@ -43,7 +43,7 @@ Item
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
-	| ObjectId '=>' Object { [Pair $1 (ObjItem $3)] }
+	| Key '=>' Object { [Pair $1 (ObjItem $3)] }
 
 EmptyObj:
 	'{' '}' { EmptyObj }
@@ -57,14 +57,14 @@ ArrList
 	| Item ';' ArrList { $1 : $3 }
 
 Pair
-	: ObjectId Literal { Pair $1 (LitItem $2) }
-	| ObjectId Pair { Pair $1 (ObjItem [$2]) }
-	| ObjectId '{' Object '}' { Pair $1 (ObjItem $3) }
-	| ObjectId  EmptyObj { Pair $1 EmptyObj }
+	: Key Literal { Pair $1 (LitItem $2) }
+	| Key Pair { Pair $1 (ObjItem [$2]) }
+	| Key '{' Object '}' { Pair $1 (ObjItem $3) }
+	| Key EmptyObj { Pair $1 EmptyObj }
 
-ObjectId
-	: id { ObjId $1 }
- 	| string { StringId $1 } 
+Key	
+	: id { IdKey $1 }
+ 	| string { StringKey $1 } 
 
 Literal
 	: string { String $1 }
