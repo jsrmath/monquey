@@ -14,6 +14,9 @@ import MongoCodeGen
 	id { TokenID $$ }
 	string { TokenString $$ }
 	int { TokenInt $$ }
+	true { TokenKeyword "true" }
+	false { TokenKeyword "false" }
+	null { TokenKeyword "null" }
 	'|' { TokenPipe }
 	',' { TokenComma }
 	';' { TokenSemi }
@@ -70,6 +73,9 @@ Key
 Literal
 	: string { String $1 }
 	| int { Int $1 }
+	| true { Bool True }
+	| false { Bool False }
+	| null { Null }
 	| Array { Array $1 }
 
 {
@@ -103,7 +109,9 @@ lexer ('\"':cs) = lexString cs '\"'
 lexer (c:cs) 
     | isSpace c = lexer cs
     | isDigit c = lexNum (c:cs)
-    | isValidId c cs = lexId (c:cs)
+    | isValidId c cs = case lexKeyword (c:cs) of
+    	Just (kwd, rest) -> TokenKeyword kwd : lexer rest
+    	Nothing -> lexId (c:cs)
     | otherwise = parseError []
 
 lexString cs q = TokenString str : lexer (tail rest)
@@ -111,6 +119,13 @@ lexString cs q = TokenString str : lexer (tail rest)
 
 lexNum cs = TokenInt (read num) : lexer rest
     where (num, rest) = span isDigit cs
+
+lexKeyword :: [Char] -> Maybe (String, [Char])
+lexKeyword cs = foldr lexKeyword' Nothing ["true", "false", "null"] where
+	lexKeyword' kwd Nothing =
+		let len = length kwd in
+		if take len cs == kwd then Just (kwd, drop len cs) else Nothing
+	lexKeyword' _ res = res
 
 lexId cs =
     let (id, rest) = span' isValidId cs in TokenID id : lexer rest

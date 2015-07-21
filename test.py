@@ -2,6 +2,7 @@ import os
 from termcolor import colored
 
 invalid = 'Invalid command'
+badparse = ''
 
 cases = [
   ('db coll find | a 1, b 2', 'db.coll.find({"a": 1, "b": 2});'),
@@ -20,8 +21,10 @@ cases = [
   ('db coll find | a=>b=>c 1', 'db.coll.find({"a": {"b": {"c": 1}}});'),
   ('db coll find | a.b 1', 'db.coll.find({"a.b": 1});'),
   ('db people find | | name 1', 'db.people.find({}, {"name": 1});'),
+  ('db coll find | a true, b false, c null', 'db.coll.find({"a": true, "b": false, "c": null});'),
   ('use mydb', 'use mydb;'),
-  ('foo bar baz', invalid)
+  ('foo bar baz', invalid),
+  ('db coll find | a b', badparse)
 ]
 
 for case in cases:

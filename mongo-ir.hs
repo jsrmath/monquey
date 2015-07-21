@@ -19,6 +19,8 @@ data Key
 data Literal
 	= String String
 	| Int Int
+	| Bool Bool
+	| Null
 	| Array [Item]
 	deriving Show
 
@@ -26,4 +28,5 @@ data Pair = Pair Key Item deriving Show
 
 data Token = TokenDB | TokenID String | TokenString String | TokenInt Int | TokenPipe | TokenComma
            | TokenSemi | TokenLBrace | TokenRBrace | TokenLBracket | TokenRBracket | TokenArrow
+           | TokenKeyword String
            deriving Show

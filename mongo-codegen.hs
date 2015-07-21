@@ -25,6 +25,9 @@ genObj obj = "{" ++ (intercalate ", " $ map genPair obj) ++ "}"
 genLit :: Literal -> String
 genLit (Int i) = show i
 genLit (String s) = show s
+genLit (Bool True) = "true"
+genLit (Bool False) = "false"
+genLit Null = "null"
 genLit (Array a) = "[" ++ (intercalate ", " $ map genItem a) ++ "]"
 
 genKey :: Key -> String
