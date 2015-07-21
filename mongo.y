@@ -75,7 +75,7 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-tokenChars = " |,;{}[]='\""
+tokenChars = " |,;{}[]='\"\n"
 
 isValidId :: Char -> Bool
 isValidId c = not (isInfixOf [c] tokenChars)

@@ -13,7 +13,7 @@ data Item
 
 data Key 
 	= IdKey Identifier  
-        | StringKey String
+    | StringKey String
 	deriving Show
 
 data Literal
