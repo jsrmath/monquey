@@ -22,11 +22,17 @@ genObj obj = "{" ++ (intercalate ", " $ map genPair obj) ++ "}"
 
 genLit :: Literal -> String
 genLit (Int i) = show i
-genLit (String s) = "\"" ++ s ++ "\""
+genLit (String s) = show s
 genLit (Array a) = "[" ++ (intercalate ", " $ map genItem a) ++ "]"
 
 genId :: String -> String
-genId id = "\"" ++ id ++ "\""
+genId "<" = show "$lt"
+genId ">" = show "$gt"
+genId "<=" = show "$lte"
+genId ">=" = show "$gte"
+genId "=" = show "$eq"
+genId "!=" = show "$ne"
+genId id = show id
 
 genPair :: Pair -> String
 genPair (Pair id item) = genId id ++ ": " ++ genItem item

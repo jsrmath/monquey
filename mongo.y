@@ -70,6 +70,11 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
+isIdSymbol :: Char -> Bool
+isIdSymbol '_' = True
+isIdSymbol '!' = True
+isIdSymbol s = isSymbol s
+
 lexer :: String -> [Token]
 lexer [] = []
 lexer ('|':cs) = TokenPipe : lexer cs
@@ -82,11 +87,10 @@ lexer (']':cs) = TokenRBracket : lexer cs
 lexer ('=':'>':cs) = TokenArrow : lexer cs
 lexer ('\'':cs) = lexString cs '\'' 
 lexer ('\"':cs) = lexString cs '\"' 
-lexer ('_':cs) = lexId ('_':cs)
 lexer (c:cs) 
     | isSpace c = lexer cs
     | isDigit c = lexNum (c:cs)
-    | isAlpha c || isSymbol c = lexId (c:cs)
+    | isAlpha c || isIdSymbol c = lexId (c:cs)
     | otherwise = parseError []
 
 lexString cs q = TokenString str : lexer (tail rest)

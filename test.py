@@ -10,7 +10,8 @@ cases = [
   ('db coll find | a 1, c => d => b 1, c 2', 'db.coll.find({"a": 1, "c": {"d": {"b": 1, "c": 2}}});'),
   ('db coll find | c => d => b 1, c 2, a 1', 'db.coll.find({"c": {"d": {"b": 1, "c": 2, "a": 1}}});'),
   ('db coll find | [e 5, a => b => c 2, d 3 ; f 6]', 'db.coll.find([{"e": 5, "a": {"b": {"c": 2, "d": 3}}}, {"f": 6}]);'),
-  ('db coll find | {} | a {} | [1 ; {}]', 'db.coll.find({}, {"a": {}}, [1, {}]);')
+  ('db coll find | {} | a {} | [1 ; {}]', 'db.coll.find({}, {"a": {}}, [1, {}]);'),
+  ('db coll find | > 5, < 5, >= 5, <= 5, = 5, != 5', 'db.coll.find({"$gt": 5, "$lt": 5, "$gte": 5, "$lte": 5, "$eq": 5, "$ne": 5});')
 ]
 
 for case in cases:
