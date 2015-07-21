@@ -27,14 +27,15 @@ genLit (Int i) = show i
 genLit (String s) = show s
 genLit (Array a) = "[" ++ (intercalate ", " $ map genItem a) ++ "]"
 
-genId :: String -> String
-genId "<" = show "$lt"
-genId ">" = show "$gt"
-genId "<=" = show "$lte"
-genId ">=" = show "$gte"
-genId "=" = show "$eq"
-genId "!=" = show "$ne"
-genId id = show id
+genKey :: Key -> String
+genKey (IdKey "<") = show "$lt"
+genKey (IdKey ">") = show "$gt"
+genKey (IdKey "<=") = show "$lte"
+genKey (IdKey ">=") = show "$gte"
+genKey (IdKey "=") = show "$eq"
+genKey (IdKey "!=") = show "$ne"
+genKey (IdKey id) = show id
+genKey (StringKey str) = show str
 
 genPair :: Pair -> String
-genPair (Pair id item) = genId id ++ ": " ++ genItem item
+genPair (Pair key item) = genKey key ++ ": " ++ genItem item

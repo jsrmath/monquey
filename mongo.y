@@ -1,6 +1,7 @@
 {
 module Main where
 import Data.Char
+import Data.List
 import MongoIR
 import MongoCodeGen
 }
@@ -42,7 +43,7 @@ Item
 Object
 	: Pair { [$1] }
 	| Pair ',' Object { $1 : $3 }
-	| id '=>' Object { [Pair $1 (ObjItem $3)] }
+	| Key '=>' Object { [Pair $1 (ObjItem $3)] }
 
 EmptyObj:
 	'{' '}' { EmptyObj }
@@ -56,10 +57,14 @@ ArrList
 	| Item ';' ArrList { $1 : $3 }
 
 Pair
-	: id Literal { Pair $1 (LitItem $2) }
-	| id Pair { Pair $1 (ObjItem [$2]) }
-	| id '{' Object '}' { Pair $1 (ObjItem $3) }
-	| id  EmptyObj { Pair $1 EmptyObj }
+	: Key Literal { Pair $1 (LitItem $2) }
+	| Key Pair { Pair $1 (ObjItem [$2]) }
+	| Key '{' Object '}' { Pair $1 (ObjItem $3) }
+	| Key EmptyObj { Pair $1 EmptyObj }
+
+Key	
+	: id { IdKey $1 }
+ 	| string { StringKey $1 } 
 
 Literal
 	: string { String $1 }
@@ -70,10 +75,10 @@ Literal
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-isIdSymbol :: Char -> Bool
-isIdSymbol '_' = True
-isIdSymbol '!' = True
-isIdSymbol s = isSymbol s
+tokenChars = " |,;{}[]='\""
+
+isValidId :: Char -> Bool
+isValidId c = not (isInfixOf [c] tokenChars)
 
 lexer :: String -> [Token]
 lexer [] = []
@@ -90,7 +95,7 @@ lexer ('\"':cs) = lexString cs '\"'
 lexer (c:cs) 
     | isSpace c = lexer cs
     | isDigit c = lexNum (c:cs)
-    | isAlpha c || isIdSymbol c = lexId (c:cs)
+    | isValidId c = lexId (c:cs)
     | otherwise = parseError []
 
 lexString cs q = TokenString str : lexer (tail rest)
@@ -100,7 +105,7 @@ lexNum cs = TokenInt (read num) : lexer rest
     where (num, rest) = span isDigit cs
 
 lexId cs =
-    case span (\c -> not (isSpace c)) cs of
+    case span isValidId cs of
     	(id, rest) -> TokenID id : lexer rest
 
 main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
