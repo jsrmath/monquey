@@ -1,5 +1,5 @@
 # monquee
-A cleaner MongoDB shell syntax
+The No}}}); MongoDB Shell Syntax
 
 ## Usage
 * make
@@ -39,9 +39,9 @@ A cleaner MongoDB shell syntax
 
 `db.people.find();`
 ***
-`db inventory find | $or [ qty > 100 ; price < 10 ]`
+`db inventory find | $or [ qty > 100 ; price < 9.95 ]`
 
-`db.inventory.find({"$or": [{"qty": {"$gt": 100}}, {"price": {"$lt": 10}}]});`
+`db.inventory.find({"$or": [{"qty": {"$gt": 100}}, {"price": {"$lt": 9.95}}]});`
 ***
 `db inventory find | type $in ['food' ; 'snacks']`
 

@@ -23,8 +23,8 @@ genObj :: Object -> String
 genObj obj = "{" ++ (intercalate ", " $ map genPair obj) ++ "}"
 
 genLit :: Literal -> String
-genLit (NumType (Float n)) = show n
-genLit (NumType (Int n)) = show n
+genLit (Number (Float n)) = show n
+genLit (Number (Int n)) = show n
 genLit (String s) = show s
 genLit (Bool True) = "true"
 genLit (Bool False) = "false"

@@ -17,7 +17,7 @@ import MongoCodeGen
 	true { TokenKeyword "true" }
 	false { TokenKeyword "false" }
 	null { TokenKeyword "null" }
-        num { TokenNum $$ }
+    num { TokenNum $$ }
 	'|' { TokenPipe }
 	',' { TokenComma }
 	';' { TokenSemi }
@@ -76,7 +76,7 @@ Literal
 	| true { Bool True }
 	| false { Bool False }
 	| null { Null }
-	| num { NumType $1 }
+	| num { Number $1 }
 	| Array { Array $1 }
 
 {
