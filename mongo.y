@@ -98,18 +98,6 @@ span' p xs@(x:xs')
 floatRegex = "^-?([0-9]+\\.[0-9]*|[0-9]*\\.[0-9]+)"
 intRegex = "^-?[0-9]+"
 
-matchFloat :: String -> Maybe (Token, String)
-matchFloat cs = 
-     let (before, f, rest) = cs =~ floatRegex in
-     if before == "" && f /= "" then Just (TokenNum(Float (read f)), rest)
-     else Nothing
-
-matchInt :: String -> Maybe (Token, String)
-matchInt cs = 
-     let (before, i, rest) = cs =~ intRegex in
-     if before == "" && i /= "" then Just (TokenNum(Int (read i)), rest)
-     else Nothing
-
 matchNum :: String -> (String, (String -> Token)) -> Maybe (Token, [Char])
 matchNum cs (regex, makeNum) = 
      let (before, n, rest) = cs =~ regex in
