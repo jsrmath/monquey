@@ -17,6 +17,7 @@ cases = [
   ('db coll find | \$or [b \$in [2;3;"string"]; a 5]', 'db.coll.find({"$or": [{"b": {"$in": [2, 3, "string"]}}, {"a": 5}]});'), 
   ('db coll find | "a b" 1', 'db.coll.find({"a b": 1});'),
   ('db coll find | a "yay monquee"', 'db.coll.find({"a": "yay monquee"});'),
+  ('db coll find | a 0.5, a -0.5, a .5, a 5., a -.5, a -5., a 5, a -5', 'db.coll.find({"a": 0.5, "a": -0.5, "a": 0.5, "a": 5.0, "a": -0.5, "a": -5.0, "a": 5, "a": -5});'),
   ('db coll find | > 5, < 5, >= 5, <= 5, = 5, != 5', 'db.coll.find({"$gt": 5, "$lt": 5, "$gte": 5, "$lte": 5, "$eq": 5, "$ne": 5});'),
   ('db coll find | a=>b=>c 1', 'db.coll.find({"a": {"b": {"c": 1}}});'),
   ('db coll find | a.b 1', 'db.coll.find({"a.b": 1});'),

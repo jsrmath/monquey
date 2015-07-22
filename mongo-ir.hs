@@ -13,20 +13,25 @@ data Item
 
 data Key 
 	= IdKey Identifier  
-    | StringKey String
+        | StringKey String
 	deriving Show
+
+data NumType
+ 	= Int Int
+ 	| Float Float
+	deriving (Show, Read)
 
 data Literal
 	= String String
-	| Int Int
 	| Bool Bool
 	| Null
+  	| NumType NumType
 	| Array [Item]
 	deriving Show
 
 data Pair = Pair Key Item deriving Show
 
-data Token = TokenDB | TokenID String | TokenString String | TokenInt Int | TokenPipe | TokenComma
+data Token = TokenDB | TokenID String | TokenString String | TokenInt Int | TokenNum NumType | TokenPipe | TokenComma
            | TokenSemi | TokenLBrace | TokenRBrace | TokenLBracket | TokenRBracket | TokenArrow
            | TokenKeyword String
            deriving Show
