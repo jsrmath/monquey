@@ -25,19 +25,7 @@ A cleaner MongoDB shell syntax
 
 `db.people.insert({"name": "Julian", "age": 19});`
 ***
-<<<<<<< HEAD
 `db people insert | age 19, name => first "Julian", last "Rosenblum"`
-=======
-`db people find | name "Julian", age 19 | age 0`
-
-`db.people.find({"name": "Julian", "age": 19}, {"age": 0});`
-***
-`db.people.find |`
-
-`db.people.find({});`
-***
-`db people find | age 19, name => first "Julian", last "Rosenblum"`
->>>>>>> Added support for empty items in arglist
 
 `db.people.insert({"age": 19, "name": {"first": "Julian", "last": "Rosenblum"}});`
 ***

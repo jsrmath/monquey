@@ -98,6 +98,18 @@ span' p xs@(x:xs')
 floatRegex = "^-?[0-9]+\\.?[0-9]+"
 intRegex = "^-?[0-9]+"
 
+matchFloat :: String -> Maybe (Token, String)
+matchFloat cs = 
+     let (before, f, rest) = cs =~ floatRegex in
+     if before == "" && f /= "" then Just (TokenNum(Float (read f)), rest)
+     else Nothing
+
+matchInt :: String -> Maybe (Token, String)
+matchInt cs = 
+     let (before, i, rest) = cs =~ intRegex in
+     if before == "" && i /= "" then Just (TokenNum(Int (read i)), rest)
+     else Nothing
+
 lexer :: String -> [Token]
 lexer [] = []
 lexer ('|':cs) = TokenPipe : lexer cs
@@ -112,7 +124,9 @@ lexer ('\'':cs) = lexString cs '\''
 lexer ('\"':cs) = lexString cs '\"' 
 lexer (c:cs) 
     | isSpace c = lexer cs
-    | isDigit c || c == '-' = lexNum (c:cs)
+    | isDigit c || c == '-' = case lexNum (c:cs) of
+	Just (n, rest) -> n : lexer rest
+	Nothing -> parseError []
     | isValidId c cs = case lexKeyword (c:cs) of
     	Just (kwd, rest) -> TokenKeyword kwd : lexer rest
     	Nothing -> lexId (c:cs)
@@ -121,13 +135,11 @@ lexer (c:cs)
 lexString cs q = TokenString str : lexer (tail rest)
    where (str, rest) = span (\c -> c /= q) cs 
 
-<<<<<<< HEAD
-lexNum cs =
-	let (before, f, rest) = cs =~ floatRegex in
-	if before == "" && f /= "" then TokenNum (Float (read f)) : lexer rest 
-	else let (before, i, rest) = cs =~ intRegex in
-	  if before == "" && i /= "" then TokenNum (Int (read i)) : lexer rest
-	else parseError []   
+lexNum :: [Char] -> Maybe (Token, [Char])
+lexNum cs = foldr lexNum' Nothing [matchInt, matchFloat] where
+        lexNum' :: (String -> Maybe (Token, String)) -> Maybe (Token, String) -> Maybe (Token, String)
+        lexNum' f Nothing = f cs
+        lexNum' f res = res
 
 lexKeyword :: [Char] -> Maybe (String, [Char])
 lexKeyword cs = foldr lexKeyword' Nothing ["true", "false", "null"] where
