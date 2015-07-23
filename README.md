@@ -1,6 +1,10 @@
 # monquey
 The No}}}); MongoDB Shell Syntax
 
+## Dependencies
+* `cabal install regex-posix`
+* `pip install termcolor` (for testing)
+
 ## Usage
 * make
 * echo 'some query here' | ./monquey
