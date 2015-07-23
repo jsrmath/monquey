@@ -1,6 +1,6 @@
 all:
-	happy mongo.y
-	ghc mongo-ir.hs mongo-codegen.hs mongo.hs mongo-lexer.hs
+	happy monquey.y
+	ghc monquey-ir.hs monquey-codegen.hs monquey.hs monquey-lexer.hs
 
 clean:
-	rm *.o *.hi mongo mongo.hs
+	rm *.o *.hi monquey monquey.hs

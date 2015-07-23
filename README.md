@@ -1,9 +1,9 @@
-# monquee
+# monquey
 The No}}}); MongoDB Shell Syntax
 
 ## Usage
 * make
-* echo 'some query here' | ./mongo
+* echo 'some query here' | ./monquey
 
 ## Testing
 * python test.py

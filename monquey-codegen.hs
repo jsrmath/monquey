@@ -1,8 +1,8 @@
-module MongoCodeGen where
-import MongoIR
+module MonqueyCodeGen where
+import MonqueyIR
 import Data.List
 
-genCommand :: MongoIR.Command -> String
+genCommand :: Command -> String
 genCommand (Command ["use", id] []) = "use " ++ id ++ ";"
 genCommand (Command ("db" : ids) items) =
 	genBeginIds ("db" : ids) ++ "(" ++ genItems items ++ ");"

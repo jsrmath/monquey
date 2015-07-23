@@ -1,4 +1,4 @@
-module MongoIR where
+module MonqueyIR where
 
 type Object = [Pair]
 type Identifier = String

@@ -1,9 +1,8 @@
-module MongoLexer where
+module MonqueyLexer where
 import Data.Char
 import Data.List
 import Text.Regex.Posix
-import MongoIR
-import MongoCodeGen
+import MonqueyIR
 
 tokenChars = " |,;{}[]'\"\n"
 

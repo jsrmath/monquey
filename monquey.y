@@ -3,12 +3,12 @@ module Main where
 import Data.Char
 import Data.List
 import Text.Regex.Posix
-import MongoIR
-import MongoCodeGen
-import MongoLexer
+import MonqueyIR
+import MonqueyCodeGen
+import MonqueyLexer
 }
 
-%name mongo
+%name monquey
 %tokentype { Token }
 %error { parseError }
 
@@ -81,5 +81,5 @@ Literal
 	| Array { Array $1 }
 
 {
-main = getContents >>= putStrLn . MongoCodeGen.genCommand . mongo . lexer
+main = getContents >>= putStrLn . genCommand . monquey . lexer
 }

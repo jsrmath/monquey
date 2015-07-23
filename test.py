@@ -30,7 +30,7 @@ cases = [
 ]
 
 for case in cases:
-	cmd = 'echo "' + case[0].replace('"', '\\"') +  '" | ./mongo'
+	cmd = 'echo "' + case[0].replace('"', '\\"') +  '" | ./monquey'
 	output = os.popen(cmd).read()
 	passed = output[:-1] == case[1] # trim newline
 	result = ('PASSED' if passed else 'FAILED') + ': ' + case[0] + (("\nExpected:\t" + case[1] + "\nReceived:\t"+output) if not passed else '')
